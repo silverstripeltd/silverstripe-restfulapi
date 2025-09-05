@@ -2,6 +2,7 @@
 
 namespace Colymba\RESTfulAPI\QueryHandlers;
 
+use SilverStripe\Core\Validation\ValidationException;
 use Colymba\RESTfulAPI\QueryHandlers\QueryHandler;
 use Colymba\RESTfulAPI\RESTfulAPI;
 use Colymba\RESTfulAPI\RESTfulAPIError;
@@ -10,7 +11,6 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataList;
-use SilverStripe\ORM\ValidationException;
 
 /**
  * Default RESTfulAPI Query handler

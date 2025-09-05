@@ -47,8 +47,8 @@ class DefaultQueryHandlerTest extends RESTfulAPITester
     {
         parent::setUp();
 
-        Config::inst()->update(ApiTestBook::class, 'api_access', true);
-        Config::inst()->update(ApiTestWidget::class, 'api_access', true);
+        Config::modify()->set(ApiTestBook::class, 'api_access', true);
+        Config::modify()->set(ApiTestWidget::class, 'api_access', true);
 
         $widget = ApiTestWidget::create(['Name' => 'TestWidget1']);
         $widget->write();
@@ -128,7 +128,7 @@ class DefaultQueryHandlerTest extends RESTfulAPITester
      */
     public function testAPIDisabled()
     {
-        Config::inst()->update(ApiTestBook::class, 'api_access', false);
+        Config::modify()->set(ApiTestBook::class, 'api_access', false);
 
         $qh = $this->getQueryHandler();
         $request = $this->getHTTPRequest('GET', ApiTestBook::class, '1');
@@ -208,7 +208,7 @@ class DefaultQueryHandlerTest extends RESTfulAPITester
      */
     public function testMaxRecordsLimit()
     {
-        Config::inst()->update(DefaultQueryHandler::class, 'max_records_limit', 1);
+        Config::modify()->set(DefaultQueryHandler::class, 'max_records_limit', 1);
 
         $qh = $this->getQueryHandler();
         $request = $this->getHTTPRequest('GET', ApiTestBook::class);

@@ -152,7 +152,7 @@ class DefaultSerializer implements Serializer
         $apiFields = (array) Config::inst()->get($class, 'api_fields');
 
         //$many_many_extraFields = $dataObject->many_many_extraFields();
-        $many_many_extraFields = $dataObject->stat('many_many_extraFields');
+        $many_many_extraFields = $dataObject->config()->get('many_many_extraFields');
 
         // setup ID (not included in $db!!)
         $serializedColumnName = $this->serializeColumnName('ID');

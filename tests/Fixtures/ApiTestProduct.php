@@ -19,16 +19,16 @@ use SilverStripe\ORM\DataObject;
  */
 class ApiTestProduct extends DataObject
 {
-    private static $table_name = 'ApiTestProduct';
+    private static string $table_name = 'ApiTestProduct';
 
-    public static $rawJSON;
+    public static string $rawJSON;
 
-    private static $db = array(
+    private static array $db = [
         'Title' => 'Varchar(64)',
         'Soldout' => 'Boolean',
-    );
+    ];
 
-    private static $api_access = true;
+    private static bool $api_access = true;
 
     public function onAfterDeserialize(&$payload)
     {

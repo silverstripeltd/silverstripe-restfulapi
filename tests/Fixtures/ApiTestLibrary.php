@@ -22,15 +22,15 @@ use Colymba\RESTfulAPI\Tests\Fixtures\ApiTestBook;
  */
 class ApiTestLibrary extends DataObject
 {
-    private static $table_name = 'ApiTestLibrary';
+    private static string $table_name = 'ApiTestLibrary';
 
-    private static $db = array(
+    private static array $db = [
         'Name' => 'Varchar(255)',
-    );
+    ];
 
-    private static $many_many = array(
+    private static array $many_many = [
         'Books' => ApiTestBook::class,
-    );
+    ];
 
     public function canView($member = null)
     {

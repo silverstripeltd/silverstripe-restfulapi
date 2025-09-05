@@ -8,6 +8,8 @@ use Colymba\RESTfulAPI\Tests\RESTfulAPITester;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Security\Member;
+use Colymba\RESTfulAPI\Tests\Fixtures\ApiTestAuthor;
+use Colymba\RESTfulAPI\Tests\Fixtures\ApiTestBook;
 use Colymba\RESTfulAPI\Tests\Fixtures\ApiTestLibrary;
 
 
@@ -31,6 +33,8 @@ class DefaultPermissionManagerTest extends RESTfulAPITester
     );
 
     protected static $extra_dataobjects = array(
+        ApiTestAuthor::class,
+        ApiTestBook::class,
         ApiTestLibrary::class,
     );
 
@@ -78,8 +82,8 @@ class DefaultPermissionManagerTest extends RESTfulAPITester
      */
     public function testReadPermissions()
     {
-        Config::inst()->update(RESTfulAPI::class, 'access_control_policy', 'ACL_CHECK_MODEL_ONLY');
-        Config::inst()->update(RESTfulAPI::class, 'cors', array(
+        Config::modify()->set(RESTfulAPI::class, 'access_control_policy', 'ACL_CHECK_MODEL_ONLY');
+        Config::modify()->set(RESTfulAPI::class, 'cors', array(
             'Enabled' => false,
         ));
 
@@ -113,8 +117,8 @@ class DefaultPermissionManagerTest extends RESTfulAPITester
      */
     public function testEditPermissions()
     {
-        Config::inst()->update(RESTfulAPI::class, 'access_control_policy', 'ACL_CHECK_MODEL_ONLY');
-        Config::inst()->update(RESTfulAPI::class, 'cors', array(
+        Config::modify()->set(RESTfulAPI::class, 'access_control_policy', 'ACL_CHECK_MODEL_ONLY');
+        Config::modify()->set(RESTfulAPI::class, 'cors', array(
             'Enabled' => false,
         ));
 
@@ -148,8 +152,8 @@ class DefaultPermissionManagerTest extends RESTfulAPITester
      */
     public function testCreatePermissions()
     {
-        Config::inst()->update(RESTfulAPI::class, 'access_control_policy', 'ACL_CHECK_MODEL_ONLY');
-        Config::inst()->update(RESTfulAPI::class, 'cors', array(
+        Config::modify()->set(RESTfulAPI::class, 'access_control_policy', 'ACL_CHECK_MODEL_ONLY');
+        Config::modify()->set(RESTfulAPI::class, 'cors', array(
             'Enabled' => false,
         ));
 
@@ -181,8 +185,8 @@ class DefaultPermissionManagerTest extends RESTfulAPITester
      */
     public function testDeletePermissions()
     {
-        Config::inst()->update(RESTfulAPI::class, 'access_control_policy', 'ACL_CHECK_MODEL_ONLY');
-        Config::inst()->update(RESTfulAPI::class, 'cors', array(
+        Config::modify()->set(RESTfulAPI::class, 'access_control_policy', 'ACL_CHECK_MODEL_ONLY');
+        Config::modify()->set(RESTfulAPI::class, 'cors', array(
             'Enabled' => false,
         ));
 

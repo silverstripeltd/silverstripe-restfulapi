@@ -6,7 +6,6 @@ use Colymba\RESTfulAPI\RESTfulAPIError;
 use Colymba\RESTfulAPI\Authenticators\Authenticator;
 use Colymba\RESTfulAPI\Extensions\TokenAuthExtension;
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Control\Session;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
@@ -166,7 +165,7 @@ class TokenAuthenticator implements Authenticator
                     $member->{$tokenDBColumn} = $tokenData['token'];
                     $member->{$expireDBColumn} = $tokenData['expire'];
                     $member->write();
-                    $member->login();
+                    Injector::inst()->get(IdentityStore::class)->logIn($member, false, $request);
                 }
             }
 
@@ -201,7 +200,7 @@ class TokenAuthenticator implements Authenticator
 
         if ($member) {
             //logout
-            $member->logout();
+            Injector::inst()->get(IdentityStore::class)->logOut($request);
 
             if ($this->tokenConfig['owner'] === Member::class) {
                 //generate expired token
@@ -233,7 +232,7 @@ class TokenAuthenticator implements Authenticator
             $token = $member->generateAutologinTokenAndStoreHash();
 
             $link = Security::lost_password_url();
-            $lostPasswordHandler = new LostPasswordHandler($link);
+            $lostPasswordHandler = LostPasswordHandler::create($link);
 
             $lostPasswordHandler->sendEmail($member, $token);
         }
@@ -313,7 +312,7 @@ class TokenAuthenticator implements Authenticator
             $expire = time() - ($life * 2);
         }
 
-        $generator = new RandomGenerator();
+        $generator = RandomGenerator::create();
         $tokenString = $generator->randomToken();
 
         $e = PasswordEncryptor::create_for_algorithm('blowfish'); //blowfish isn't URL safe and maybe too long?

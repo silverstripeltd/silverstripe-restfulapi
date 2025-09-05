@@ -66,7 +66,7 @@ class DefaultSerializerTest extends RESTfulAPITester
      */
     public function testSerialize()
     {
-        Config::inst()->update(RESTfulAPI::class, 'access_control_policy', false);
+        Config::modify()->set(RESTfulAPI::class, 'access_control_policy', false);
         $serializer = $this->getSerializer();
 
         // test single dataObject serialization
@@ -108,9 +108,9 @@ class DefaultSerializerTest extends RESTfulAPITester
      */
     public function testEmbeddedRecords()
     {
-        Config::inst()->update(RESTfulAPI::class, 'access_control_policy', 'ACL_CHECK_CONFIG_ONLY');
-        Config::inst()->update(ApiTestLibrary::class, 'api_access', true);
-        Config::inst()->update(RESTfulAPI::class, 'embedded_records', array(
+        Config::modify()->set(RESTfulAPI::class, 'access_control_policy', 'ACL_CHECK_CONFIG_ONLY');
+        Config::modify()->set(ApiTestLibrary::class, 'api_access', true);
+        Config::modify()->set(RESTfulAPI::class, 'embedded_records', array(
             'Colymba\RESTfulAPI\Tests\Fixtures\ApiTestLibrary' => array('Books'),
         ));
 
@@ -118,7 +118,7 @@ class DefaultSerializerTest extends RESTfulAPITester
         $dataObject = ApiTestLibrary::get()->filter(array('Name' => 'Helsinki'))->first();
 
         // api access disabled
-        Config::inst()->update(ApiTestBook::class, 'api_access', false);
+        Config::modify()->set(ApiTestBook::class, 'api_access', false);
         $result = $serializer->serialize($dataObject);
         $result = json_decode($result);
 
@@ -128,7 +128,7 @@ class DefaultSerializerTest extends RESTfulAPITester
         );
 
         // api access enabled
-        Config::inst()->update(ApiTestBook::class, 'api_access', true);
+        Config::modify()->set(ApiTestBook::class, 'api_access', true);
         $result = $serializer->serialize($dataObject);
         $result = json_decode($result);
 
@@ -159,13 +159,13 @@ class DefaultSerializerTest extends RESTfulAPITester
      */
     public function testReturnDefinedApiFieldsOnly()
     {
-        Config::inst()->update(ApiTestAuthor::class, 'api_access', true);
+        Config::modify()->set(ApiTestAuthor::class, 'api_access', true);
 
         $serializer = $this->getSerializer();
 
         $dataObject = ApiTestAuthor::get()->filter(array('Name' => 'Marie'))->first();
 
-        Config::inst()->update(ApiTestAuthor::class, 'api_fields', array('Name'));
+        Config::modify()->set(ApiTestAuthor::class, 'api_fields', array('Name'));
 
         $result = $serializer->serialize($dataObject);
         $result = json_decode($result);
@@ -180,7 +180,7 @@ class DefaultSerializerTest extends RESTfulAPITester
             'You should be able to exclude related models by not including them in api_fields.'
         );
 
-        Config::inst()->update(ApiTestAuthor::class, 'api_fields', array('IsMan', 'Books'));
+        Config::modify()->set(ApiTestAuthor::class, 'api_fields', array('IsMan', 'Books'));
 
         $result = $serializer->serialize($dataObject);
         $result = json_decode($result);
