@@ -2,16 +2,15 @@
 
 namespace Colymba\RESTfulAPI\Tests\Authenticators;
 
-use Colymba\RESTfulAPI\RESTfulAPIError;
-use Colymba\RESTfulAPI\Authenticators\TokenAuthenticator;
-use Colymba\RESTfulAPI\Extensions\TokenAuthExtension;
-use Colymba\RESTfulAPI\Tests\RESTfulAPITester;
-use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Session;
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\Member;
-
-
+use SilverStripe\Security\Security;
+use SilverStripe\Control\HTTPRequest;
+use Colymba\RESTfulAPI\RESTfulAPIError;
+use SilverStripe\Core\Injector\Injector;
+use Colymba\RESTfulAPI\Tests\RESTfulAPITester;
+use Colymba\RESTfulAPI\Extensions\TokenAuthExtension;
+use Colymba\RESTfulAPI\Authenticators\TokenAuthenticator;
 
 /**
  * TokenAuthenticator Test suite
@@ -78,7 +77,7 @@ class TokenAuthenticatorTest extends RESTfulAPITester
         $result = $auth->login($request);
 
         $this->assertEquals(
-            Member::currentUserID(),
+            Security::getCurrentUser()->ID,
             $member->ID,
             "TokenAuth successful login should login the user"
         );
@@ -97,6 +96,18 @@ class TokenAuthenticatorTest extends RESTfulAPITester
         $auth = $this->getAuthenticator();
         $request = new HTTPRequest(
             'GET',
+            'api/auth/login',
+            array(
+                'email' => 'test@test.com',
+                'pwd' => 'Test$password1',
+            )
+        );
+        $request->setSession(new Session([]));
+
+        $auth->login($request);
+
+        $request = new HTTPRequest(
+            'GET',
             'api/auth/logout',
             array(
                 'email' => 'test@test.com',
@@ -107,7 +118,7 @@ class TokenAuthenticatorTest extends RESTfulAPITester
         $result = $auth->logout($request);
 
         $this->assertNull(
-            Member::currentUser(),
+            Security::getCurrentUser(),
             "TokenAuth successful logout should logout the user"
         );
     }

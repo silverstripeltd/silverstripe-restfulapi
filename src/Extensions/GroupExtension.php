@@ -2,7 +2,7 @@
 
 namespace Colymba\RESTfulAPI\Extensions;
 
-use SilverStripe\ORM\DataExtension;
+use SilverStripe\Core\Extension;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\PermissionProvider;
@@ -22,7 +22,7 @@ use SilverStripe\Security\Group;
  * @package RESTfulAPI
  * @subpackage Permission
  */
-class GroupExtension extends DataExtension implements PermissionProvider
+class GroupExtension extends Extension implements PermissionProvider
 {
     /**
      * Basic RESTfulAPI Permission set
@@ -67,7 +67,7 @@ class GroupExtension extends DataExtension implements PermissionProvider
         ));
 
         if (!$readersGroup->count()) {
-            $readerGroup = new Group();
+            $readerGroup = Group::create();
             $readerGroup->Code = 'restfulapi-readers';
             $readerGroup->Title = 'RESTful API Readers';
             $readerGroup->Sort = 0;
@@ -81,7 +81,7 @@ class GroupExtension extends DataExtension implements PermissionProvider
         ));
 
         if (!$editorsGroup->count()) {
-            $editorGroup = new Group();
+            $editorGroup = Group::create();
             $editorGroup->Code = 'restfulapi-editors';
             $editorGroup->Title = 'RESTful API Editors';
             $editorGroup->Sort = 0;
@@ -97,7 +97,7 @@ class GroupExtension extends DataExtension implements PermissionProvider
         ));
 
         if (!$adminsGroup->count()) {
-            $adminGroup = new Group();
+            $adminGroup = Group::create();
             $adminGroup->Code = 'restfulapi-administrators';
             $adminGroup->Title = 'RESTful API Administrators';
             $adminGroup->Sort = 0;

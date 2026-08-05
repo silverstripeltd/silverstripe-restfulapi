@@ -22,14 +22,14 @@ use Colymba\RESTfulAPI\Tests\Fixtures\ApiTestBook;
 
 class ApiTestAuthor extends DataObject
 {
-    private static $table_name = 'ApiTestAuthor';
+    private static string $table_name = 'ApiTestAuthor';
 
-    private static $db = array(
+    private static array $db = [
         'Name' => 'Varchar(255)',
         'IsMan' => 'Boolean',
-    );
+    ];
 
-    private static $has_many = array(
+    private static array $has_many = [
         'Books' => ApiTestBook::class,
-    );
+    ];
 }

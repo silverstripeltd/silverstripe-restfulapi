@@ -3,12 +3,13 @@
 namespace Colymba\RESTfulAPI\Tests\API;
 
 use Colymba\RESTfulAPI\RESTfulAPI;
-use Colymba\RESTfulAPI\Tests\RESTfulAPITester;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
-use Colymba\RESTfulAPI\Tests\Fixtures\ApiTestAuthor;
+use Colymba\RESTfulAPI\Tests\RESTfulAPITester;
 use Colymba\RESTfulAPI\Tests\Fixtures\ApiTestBook;
+use Colymba\RESTfulAPI\Tests\Fixtures\ApiTestAuthor;
 use Colymba\RESTfulAPI\Tests\Fixtures\ApiTestLibrary;
+use Colymba\RESTfulAPI\QueryHandlers\DefaultQueryHandler;
 
 
 
@@ -41,7 +42,7 @@ class RESTfulAPITest extends RESTfulAPITester
      */
     public function testDataObjectAPIEnaled()
     {
-        Config::inst()->update(RESTfulAPI::class, 'access_control_policy', 'ACL_CHECK_CONFIG_ONLY');
+        Config::modify()->set(RESTfulAPI::class, 'access_control_policy', 'ACL_CHECK_CONFIG_ONLY');
         // ----------------
         // Method Calls
 
@@ -50,12 +51,12 @@ class RESTfulAPITest extends RESTfulAPITester
         $this->assertFalse($enabled, 'Access control should return FALSE by default');
 
         // Enabled
-        Config::inst()->update(ApiTestAuthor::class, 'api_access', true);
+        Config::modify()->set(ApiTestAuthor::class, 'api_access', true);
         $enabled = RESTfulAPI::api_access_control(ApiTestAuthor::class);
         $this->assertTrue($enabled, 'Access control should return TRUE when api_access is enbaled');
 
         // Method specific
-        Config::inst()->update(ApiTestAuthor::class, 'api_access', 'GET,POST');
+        Config::modify()->set(ApiTestAuthor::class, 'api_access', 'GET,POST');
 
         $enabled = RESTfulAPI::api_access_control(ApiTestAuthor::class);
         $this->assertTrue($enabled, 'Access control should return TRUE when api_access is enbaled with default GET method');
@@ -77,7 +78,7 @@ class RESTfulAPITest extends RESTfulAPITester
     );
 
     // Access denied
-    Config::inst()->update(ApiTestAuthor::class, 'api_access', false);
+    Config::modify()->set(ApiTestAuthor::class, 'api_access', false);
     $response = Director::test('api/ApiTestAuthor/1', null, null, 'GET');
     $this->assertEquals(
     $response->getStatusCode(),
@@ -85,7 +86,7 @@ class RESTfulAPITest extends RESTfulAPITester
     );
 
     // Access denied
-    Config::inst()->update(ApiTestAuthor::class, 'api_access', 'POST');
+    Config::modify()->set(ApiTestAuthor::class, 'api_access', 'POST');
     $response = Director::test('api/ApiTestAuthor/1', null, null, 'GET');
     $this->assertEquals(
     $response->getStatusCode(),
@@ -106,7 +107,7 @@ class RESTfulAPITest extends RESTfulAPITester
      */
     public function testCORSDisabled()
     {
-        Config::inst()->update(RESTfulAPI::class, 'cors', array(
+        Config::modify()->set(RESTfulAPI::class, 'cors', array(
             'Enabled' => false,
         ));
 
@@ -162,7 +163,7 @@ class RESTfulAPITest extends RESTfulAPITester
      */
     public function testCORSHTTPMethodFiltering()
     {
-        Config::inst()->update(RESTfulAPI::class, 'cors', array(
+        Config::modify()->set(RESTfulAPI::class, 'cors', array(
             'Enabled' => true,
             'Allow-Origin' => '*',
             'Allow-Headers' => '*',
@@ -198,20 +199,29 @@ class RESTfulAPITest extends RESTfulAPITester
 
     public function testFullBasicAPIRequest()
     {
-        Config::inst()->update(RESTfulAPI::class, 'authentication_policy', false);
-        Config::inst()->update(RESTfulAPI::class, 'access_control_policy', 'ACL_CHECK_CONFIG_ONLY');
-        Config::inst()->update(ApiTestAuthor::class, 'api_access', true);
+        Config::modify()->set(RESTfulAPI::class, 'authentication_policy', false);
+        Config::modify()->set(RESTfulAPI::class, 'access_control_policy', 'ACL_CHECK_CONFIG_ONLY');
+        Config::modify()->set(ApiTestAuthor::class, 'api_access', true);
 
-        // Default serializer
-        Config::inst()->update(RESTfulAPI::class, 'dependencies', array(
+        Config::modify()->set(RESTfulAPI::class, 'dependencies', [
             'authenticator' => null,
             'authority' => null,
             'queryHandler' => '%$Colymba\RESTfulAPI\QueryHandlers\DefaultQueryHandler',
             'serializer' => '%$Colymba\RESTfulAPI\Serializers\DefaultSerializer',
-        ));
-        Config::inst()->update(RESTfulAPI::class, 'dependencies', array(
-            'deSerializer' => '%$Colymba\RESTfulAPI\Serializers\DefaultDeSerializer',
-        ));
+        ]);
+        Config::modify()->set(
+            DefaultQueryHandler::class,
+            'dependencies',
+            ['deSerializer' => '%$Colymba\RESTfulAPI\Serializers\DefaultDeSerializer']
+        );
+        Config::modify()->set(
+            DefaultQueryHandler::class,
+            'models',
+            [
+                'apitestauthor' => 'Colymba\RESTfulAPI\Tests\Fixtures\ApiTestAuthor',
+                'apitestbook' => 'Colymba\RESTfulAPI\Tests\Fixtures\ApiTestBook',
+            ]
+        );
 
         $response = Director::test('api/apitestauthor/1', null, null, 'GET');
 

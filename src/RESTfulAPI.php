@@ -364,7 +364,7 @@ class RESTfulAPI extends Controller
      */
     public function answer($json = null, $corsPreflight = false)
     {
-        $answer = new HTTPResponse();
+        $answer = HTTPResponse::create();
 
         //set response body
         if (!$corsPreflight) {
@@ -391,7 +391,7 @@ class RESTfulAPI extends Controller
      */
     public function error(RESTfulAPIError $error)
     {
-        $answer = new HTTPResponse();
+        $answer = HTTPResponse::create();
 
         $body = $this->serializer->serialize($error->body);
         $answer->setBody($body);
@@ -515,7 +515,7 @@ class RESTfulAPI extends Controller
     private static function api_access_config_check($className, $httpMethod = 'GET')
     {
         $access = false;
-        $api_access = singleton($className)->stat('api_access');
+        $api_access = singleton($className)->config()->get('api_access');
 
         if (is_string($api_access)) {
             $api_access = explode(',', strtoupper($api_access));

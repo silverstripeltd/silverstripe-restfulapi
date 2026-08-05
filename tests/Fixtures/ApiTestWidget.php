@@ -16,9 +16,9 @@ use SilverStripe\ORM\DataObject;
 
 class ApiTestWidget extends DataObject
 {
-    private static $table_name = 'ApiTestWidget';
+    private static string $table_name = 'ApiTestWidget';
 
-    private static $db = array(
+    private static array $db = [
         'Name' => 'Varchar(255)',
-    );
+    ];
 }

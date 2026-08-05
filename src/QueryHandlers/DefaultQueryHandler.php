@@ -2,6 +2,7 @@
 
 namespace Colymba\RESTfulAPI\QueryHandlers;
 
+use SilverStripe\Core\Validation\ValidationException;
 use Colymba\RESTfulAPI\QueryHandlers\QueryHandler;
 use Colymba\RESTfulAPI\RESTfulAPI;
 use Colymba\RESTfulAPI\RESTfulAPIError;
@@ -10,7 +11,6 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataList;
-use SilverStripe\ORM\ValidationException;
 
 /**
  * Default RESTfulAPI Query handler
@@ -248,7 +248,7 @@ class DefaultQueryHandler implements QueryHandler
      * @param  HTTPRequest         $request        The original HTTP request
      * @return DataObject|DataList                    Result of the search (note: DataList can be empty)
      */
-    public function findModel($model, $id = false, $queryParams = [], HTTPRequest $request = null)
+    public function findModel($model, $id = false, $queryParams = [], ?HTTPRequest $request = null)
     {
         if ($id) {
             $return = DataObject::get_by_id($model, $id);

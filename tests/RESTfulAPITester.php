@@ -77,16 +77,16 @@ class RESTfulAPITester extends SapphireTest
 
     public function setDefaultApiConfig()
     {
-        Config::inst()->update(RESTfulAPI::class, 'access_control_policy', 'ACL_CHECK_CONFIG_ONLY');
+        Config::modify()->set(RESTfulAPI::class, 'access_control_policy', 'ACL_CHECK_CONFIG_ONLY');
 
-        Config::inst()->update(RESTfulAPI::class, 'dependencies', array(
+        Config::modify()->set(RESTfulAPI::class, 'dependencies', array(
             'authenticator' => '%$Colymba\RESTfulAPI\Authenticators\TokenAuthenticator',
             'authority' => '%$Colymba\RESTfulAPI\PermissionManagers\DefaultPermissionManager',
             'queryHandler' => '%$Colymba\RESTfulAPI\QueryHandlers\DefaultQueryHandler',
             'serializer' => '%$Colymba\RESTfulAPI\Serializers\DefaultSerializer',
         ));
 
-        Config::inst()->update(RESTfulAPI::class, 'cors', array(
+        Config::modify()->set(RESTfulAPI::class, 'cors', array(
             'Enabled' => true,
             'Allow-Origin' => '*',
             'Allow-Headers' => '*',
@@ -94,11 +94,11 @@ class RESTfulAPITester extends SapphireTest
             'Max-Age' => 86400,
         ));
 
-        Config::inst()->update(DefaultQueryHandler::class, 'dependencies', array(
+        Config::modify()->set(DefaultQueryHandler::class, 'dependencies', array(
             'deSerializer' => '%$Colymba\RESTfulAPI\Serializers\DefaultDeSerializer'
         ));
 
-        Config::inst()->update(DefaultQueryHandler::class, 'models', array(
+        Config::modify()->set(DefaultQueryHandler::class, 'models', array(
                 'apitestauthor'  => 'Colymba\RESTfulAPI\Tests\Fixtures\ApiTestAuthor',
                 'apitestlibrary' => 'Colymba\RESTfulAPI\Tests\Fixtures\ApiTestLibrary',
             )
@@ -165,6 +165,6 @@ class RESTfulAPITester extends SapphireTest
 
         $this->setDefaultApiConfig();
 
-        Config::inst()->update(Director::class, 'alternate_base_url', 'http://mysite.com/');
+        Config::modify()->set(Director::class, 'alternate_base_url', 'http://mysite.com/');
     }
 }

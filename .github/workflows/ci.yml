@@ -14,8 +14,3 @@ jobs:
       simple_matrix: true
       phpcoverage_force_off: true
       endtoend: false
-      extra_jobs: |
-        - php: '8.0'
-          db: mysql80
-          phpunit: true
-          phpunit_suite: 'all'

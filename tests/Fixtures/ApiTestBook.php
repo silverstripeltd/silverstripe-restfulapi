@@ -2,8 +2,8 @@
 
 namespace Colymba\RESTfulAPI\Tests\Fixtures;
 
+use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\ValidationResult;
 use Colymba\RESTfulAPI\Tests\Fixtures\ApiTestAuthor;
 use Colymba\RESTfulAPI\Tests\Fixtures\ApiTestLibrary;
 
@@ -24,23 +24,22 @@ use Colymba\RESTfulAPI\Tests\Fixtures\ApiTestLibrary;
 
 class ApiTestBook extends DataObject
 {
-    private static $table_name = 'ApiTestBook';
+    private static string $table_name = 'ApiTestBook';
 
-    private static $db = array(
+    private static array $db = [
         'Title' => 'Varchar(255)',
         'Pages' => 'Int',
-    );
+    ];
 
-    private static $has_one = array(
+    private static array $has_one = [
         'Author' => ApiTestAuthor::class,
-    );
+    ];
 
-    private static $belongs_many_many = array(
+    private static $belongs_many_many = [
         'Libraries' => ApiTestLibrary::class,
-    );
+    ];
 
-    public function validate()
-    {
+    public function validate(): ValidationResult   {
         if ($this->Pages > 100) {
             $result = ValidationResult::create()->addError('Too many pages');
         } else {
